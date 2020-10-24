@@ -1,0 +1,230 @@
+/*
+
+Name:                       Date:               Modification:
+Stanley G. Zezotarski       10/23/2020          Initial creation
+                                                What's left to do is test the 
+                                                output, make sure that it adheres
+                                                to the instructions, and then
+                                                format it after the fashion
+                                                indicated in the instructions.
+
+
+Input:
+- Gross pay
+- Hours worked
+- First Name
+- Last Name
+- Hourly pay_rate
+- Total hours worked for pay period
+- Amount of deferred earnings
+
+Output:
+- Employee Name
+- regular hours_worked
+- overtime hours_worked
+- Gross pay
+- Fed tax
+- State tax
+- SSI defr amnt.
+- Net pay
+
+Variables required:
+-- Doubles:
+- Gross_pay
+- hourly_pay_rate
+- deferred_earn_amnt
+
+-- Ints:
+-hours_worked
+-ot_hours
+-reg_hours
+
+-- Strings:
+- first_name
+- last_name
+
+Data processes:
+- Fed Tax = 0.15 * (gross pay - SSI defr amnt.)
+- State Tax = 0.07 * Fed Tax
+- SSI Tax = 0.0775 * (Gross pay - SSI defr amnt)
+
+Add a conditional for processing overtime pay:
+- if hours_worked > 40
+  grosspay = pay_rate * 40 + (hours_worked - 40) * 1.5 * pay_rate
+
+  --Declare variables in flowchart
+  --Create external function for calculating overtime
+  --Create external function for collecting names
+  --Create external function for collecting hours Data
+  --Create external function for collecting pay data
+  --Create external function for calculating taxes 
+  --Create external function for data display
+  
+  Reminders for flowchart:
+            
+  Square w/ right angles indicates data processing
+  rectangle with soft angles indicates terminal window
+  Parallelogram indicates input or Output
+  Triangle indicates a decision
+  Circle indicates a connector
+
+  Lets do this
+*/
+
+#include <iostream>
+#include <string>
+#include <stdio.h>
+
+using namespace std;
+
+// Defining function prototypes
+// double function for returning pay values
+void collecting_pay(double &, double &, double &); //double &, double &, double &
+
+// int function for returning hour values
+void collecting_hours(int &); // int &, int &
+
+// string function for returning name values
+void collecting_names(string &, string &); // string & sring &
+
+// Int function for deciding if OT has been worked
+double is_overtime(int, double, int &, int &);
+
+// Function for calculating fed tax
+void calc_fed(double, double, double &);
+
+//Funtion for calculating state tax
+void calc_state(double, double &);
+
+// Function for calculating ssi tax
+void calc_ssi(double, double, double &);
+
+
+// Function for displaying all the data
+void display_function(string, string, int, int, double, double, double, double, 
+double, double);
+
+int main(void)
+{
+    double gross_pay, pay_rate, deferred_amnt, ot_pay, fed_tax, state_tax,
+    ssi_tax;
+    int hours_worked, ot_hours, reg_hrs_wrked;
+    string first_name, last_name;
+    
+    // Calling function to acquire pay data
+    collecting_pay(gross_pay, pay_rate, deferred_amnt);
+    
+    // Calling function to acquire hour data
+    collecting_hours(hours_worked);
+    
+    // Calling function to acquire name data
+    collecting_names(first_name, last_name);
+    
+    // Calling function to calculate fed taxes
+    calc_fed(gross_pay, deferred_amnt, fed_tax);
+    
+    // Calling function to calculate state taxes
+    calc_state(fed_tax, state_tax);
+    
+    // Calling function to calculate ssi_taxes
+    calc_ssi(gross_pay, deferred_amnt, ssi_tax);
+    
+    // Calling function that returns overtime pay
+    ot_pay = is_overtime(hours_worked, pay_rate, ot_hours, reg_hrs_wrked);
+    
+    // Calling display function to display all the collected data
+    display_function(first_name, last_name, reg_hrs_wrked, ot_hours,
+    gross_pay, pay_rate, fed_tax, state_tax, ssi_tax, deferred_amnt 
+    /*Net pay/total pay here*/);
+    
+    cout << "\n\n\nPress any key to exit...";
+    
+    fflush(stdin);
+    getchar();
+    return 0;
+    
+}
+
+void collecting_pay(double &gross_pay, double &hourly_pay, double &deferred_amnt)
+{
+     cout << "The collectng_pay function has been called...\n\n";
+     cout << "What is the gross pay?\n\n";
+     cin >> gross_pay;
+     cout << "\nWhat is the hourly pay rate?\n\n";
+     cin >> hourly_pay;
+     cout << "\nWhat is the deferred amount?\n\n";
+     cin >> deferred_amnt;
+            
+}
+
+void collecting_hours(int &hours_worked)
+{
+    cout << "The collecting_hours function has been called...\n";
+    cout << "How many hours were worked?\n";
+    cin >> hours_worked;
+    /*
+    cout << "\nWhat were the total hours worked?\n";
+    cin >> total_hrs_period;
+    */
+}
+
+void collecting_names(string &first_name, string &last_name)
+{
+     cout << "The collecting_names function has been called...\n";
+     cout << "What is the first name?\n";
+     cin >> first_name;
+     cout << "\nWhat is the last name?\n";
+     cin >> last_name;
+}
+
+double is_overtime(int ot, double pr, int &ot_hours, int &reg_hrs_wrked)
+{
+     cout << "The is_overtime function is being called...\n";
+     double total_pay;
+     ot_hours = ot - 40;
+     if(ot > 40)
+     {
+           reg_hrs_wrked = 40;
+           total_pay = pr * 40 + (ot_hours * 1.5 * pr);      
+     }
+     else
+     {
+           reg_hrs_wrked = ot;
+           total_pay = pr * 40;
+     }
+                      
+     return total_pay;
+}
+     
+void calc_fed(double gross_pay, double deferment_amnt, double &fed_tax)
+{
+       cout << "The calc_fed function has been called...\n";
+       fed_tax = 0.15 * (gross_pay - deferment_amnt);
+}
+
+void calc_state(double fed_tax, double &state_tax)
+{
+       cout << "The calc_state function has been called...\n";
+       state_tax = 0.07 * fed_tax;
+}
+
+void calc_ssi(double gross_pay, double deferment_amnt, double &ssi_tax)
+{
+       cout << "The calc_ssi function has been called...\n";
+       ssi_tax = 0.0775 * (gross_pay - deferment_amnt);
+}
+
+
+void display_function(string first_name, string last_name, int hours_worked, 
+int ot_hours, double gross_pay, double pay_rate, 
+ double fed_tax, double state_tax, double ssi_tax, double deferred_amnt)
+{
+     cout << "The display_function has been called...\n\n\n";
+     cout << first_name << " " << last_name << endl;
+     cout << hours_worked << endl;
+     cout << ot_hours << endl;
+     cout << gross_pay << " " << pay_rate << " " << deferred_amnt << endl;
+     cout << ssi_tax << endl;
+     cout << state_tax << endl;
+     cout << fed_tax << endl;
+}
